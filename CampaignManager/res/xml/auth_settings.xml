@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <PreferenceCategory android:title="Office 365 Settings" >
+        <EditTextPreference
+            android:name="sharepointUrl"
+            android:defaultValue="https://[yourtenant].sharepoint.com/"
+            android:key="prefSharepointUrl"
+            android:summary="Enter your Sharepoint Server URL"
+            android:title="Sharepoint URL" >
+        </EditTextPreference>
+        <EditTextPreference
+            android:name="siteRelativeUrl"
+            android:defaultValue="sites/androidsample"
+            android:key="prefSiteRelativeUrl"
+            android:summary="Enter your site relative URL"
+            android:title="Site URL" >
+        </EditTextPreference>
+        <EditTextPreference
+            android:name="libraryName"
+            android:defaultValue="Marketing Campaigns"
+            android:key="prefLibraryName"
+            android:summary="Enter the name of the Campaigns List"
+            android:title="List name" >
+        </EditTextPreference>
+        <EditTextPreference
+            android:name="listSize"
+            android:defaultValue="100"
+            android:inputType="number"
+            android:key="prefListSize"
+            android:summary="Default number of items to display"
+            android:title="List items count" >
+        </EditTextPreference>
+    </PreferenceCategory>
+    <PreferenceCategory android:title="OAuth Settings" >
+        <EditTextPreference
+            android:name="authority_url"
+            android:defaultValue="https://login.windows.net/[yourtenant].onmicrosoft.com"
+            android:key="prefOauthAuthorityUrl"
+            android:summary="Enter the authority URL"
+            android:title="Authority URL" >
+        </EditTextPreference>
+        <EditTextPreference
+            android:name="clientId"
+            android:defaultValue=""
+            android:key="prefOauthClientId"
+            android:summary="Enter the client ID"
+            android:title="Client ID" >
+        </EditTextPreference>
+        <EditTextPreference
+            android:name="resourceUrl"
+            android:defaultValue="https://[yourtenant].sharepoint.com/"
+            android:key="prefOauthResourceUrl"
+            android:summary="Enter the resource url"
+            android:title="Resource URL" >
+        </EditTextPreference>
+        <EditTextPreference
+            android:name="redirectUrl"
+            android:defaultValue="https://com.microsoft.campaignmanager/"
+            android:key="prefOauthRedirectUrl"
+            android:summary="Enter the redirect url configured in Azure AD"
+            android:title="Redirect URL" >
+        </EditTextPreference>
+        <EditTextPreference
+            android:name="userHint"
+            android:defaultValue="admin@[yourtenant].onmicrosoft.com"
+            android:key="prefUserHint"
+            android:summary="Enter the user you'd like to login with"
+            android:title="User hint" >
+        </EditTextPreference>
+
+        <PreferenceScreen
+            android:summary="View the current set of OAuth Tokens"
+            android:title="OAuth Tokens" >
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:targetClass="com.microsoft.campaignmanager.OAuthTokensActivity"
+                android:targetPackage="com.microsoft.campaignmanager" />
+        </PreferenceScreen>
+    </PreferenceCategory>
+
+</PreferenceScreen>

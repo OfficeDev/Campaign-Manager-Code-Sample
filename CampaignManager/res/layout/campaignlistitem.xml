@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/campaign_list_item"
+    android:layout_width="320dp"
+    android:layout_height="280dp"
+    android:layout_margin="10dp"
+    android:alpha="200"
+    android:background="@drawable/campaign_tile_background"
+    android:orientation="vertical"
+    android:padding="3dp" >
+
+    <RelativeLayout 
+    android:id="@+id/director_approver_layout"
+    android:layout_height="wrap_content" 
+    android:layout_width="fill_parent">
+    
+    <ImageView
+        android:id="@+id/sharepointlogo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="7dp"
+        android:layout_marginTop="3dp"
+        android:contentDescription="@string/descr_sharepoint_logo"
+        android:src="@drawable/sharepoint_64"
+        android:visibility="visible" />
+
+    <TextView
+        android:id="@+id/campaign_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="false"
+        android:layout_marginBottom="10dp"
+        android:layout_marginEnd="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="5dp"
+        android:layout_toRightOf="@+id/sharepointlogo"
+        android:maxLines="1"
+        android:text="@string/name_sample"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="@android:color/holo_blue_dark" />
+
+</RelativeLayout>
+
+    <TextView
+        android:id="@+id/campaign_description"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
+        android:layout_marginEnd="5dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="0dp"
+        android:contentDescription="@string/director_approver_label"
+        android:lines="3"
+        android:maxLines="3"
+        android:text="@string/description_sample"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="@android:color/black" />
+
+    <ImageView
+        android:id="@+id/divider1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="5dp"
+        android:contentDescription="@string/descr_divider"
+        android:scaleType="fitCenter"
+        android:src="@drawable/campaign_tile_divider"
+        android:visibility="gone" />
+
+<TextView
+    android:id="@+id/heading_approvers"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="5dp"
+    android:layout_marginEnd="5dp"
+    android:layout_marginLeft="5dp"
+    android:layout_marginRight="5dp"
+    android:layout_marginStart="5dp"
+    android:layout_marginTop="0dp"
+    android:contentDescription="@string/heading_approvers"
+    android:lines="1"
+    android:maxLines="1"
+    android:text="@string/heading_approvers"
+    android:textAppearance="?android:attr/textAppearanceMedium"
+    android:textColor="@android:color/black"
+    android:textStyle="bold" />
+
+<RelativeLayout
+    android:id="@+id/vp_approver_layout"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="10dp" >
+
+    <ImageView
+        android:id="@+id/vp_approver_image"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginBottom="5dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="5dp"
+        android:contentDescription="@string/descr_approver_image"
+        android:scaleType="fitStart"
+        android:src="@drawable/dorena_paschke" />
+
+        <TextView
+            android:id="@+id/vp_approver_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="false"
+            android:layout_marginBottom="5dp"
+            android:layout_marginEnd="5dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="0dp"
+            android:layout_toRightOf="@id/vp_approver_image"
+            android:text="@string/sample_approver"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@android:color/black" />
+
+        <TextView
+            android:id="@+id/vp_approver_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/vp_approver_name"
+            android:layout_below="@+id/vp_approver_name"
+            android:text="@string/vp_approver_label"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@android:color/darker_gray" />
+
+        <ImageButton
+            android:id="@+id/imageVPReject"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="17dp"
+            android:background="@android:color/holo_red_dark"
+            android:contentDescription="@string/descr_reject_button"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_action_cancel_light" />
+
+        <ImageButton
+            android:id="@+id/imageVPApprove"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="12dp"
+            android:layout_toLeftOf="@+id/imageVPReject"
+            android:background="@android:color/holo_green_dark"
+            android:contentDescription="@string/descr_approve_button"
+            android:src="@drawable/ic_action_done_light" />
+
+        <ImageView
+            android:id="@+id/imageVPStatus"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:layout_alignRight="@+id/imageVPReject"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="30dp"
+            android:contentDescription="@string/descr_status_pending"
+            android:src="@drawable/hourglass_black"
+            android:visibility="visible" />
+        
+</RelativeLayout>
+
+<TextView
+    android:id="@+id/campaignid"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_margin="10dp"
+    android:text="@string/zero"
+    android:textAppearance="?android:attr/textAppearanceSmall"
+    android:textSize="12sp"
+    android:visibility="invisible" />
+
+</LinearLayout>

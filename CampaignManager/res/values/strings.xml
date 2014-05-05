@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+ 
+    <string name="app_name">Campaign Manager</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_login_hello_app">Log on to Office 365</string>
+    <string name="title_app_settings">Settings</string>
+    <string name="title_oauth_settings">Settings</string>
+    <string name="title_oauth_tokens">Settings</string>
+    <string name="title_ntlm_settings">Settings</string>
+    <string name="title_section1">Pending Approvals</string>
+    <string name="title_section2">Campaigns in Progress</string>
+    <string name="description_sample">In keeping up with Contoso’s commitment to educational excellence and investment on youth, we’re expanding our Back to School campaign from K-12 students to college students this year.</string>
+    <string name="name_sample">Slightly Long Campaign Name</string>
+    <string name="submitted_date">Submitted:</string>
+    <string name="submitter_sample">David Longhuis</string>
+    <string name="submitter_title_sample">Product Manager</string>
+    <string name="director_approver_label">Approving Director</string>
+    <string name="vp_approver_label">Approving VP</string>
+    <string name="campaigns_json">[{"Id":1,"Name":"Business Decision Maker Campaign","Description":"This project will focus on laying out the templates and key documents around innovative ideas contest.","Site":"https://p365ppetap10.spoppe.com/sites/spc/project1","Status":"Approved","VPApprover":"Dorena Paschke","VPApprovalStatus":"Approved","DirectorApprover":"Anne Wallace","DirectorApprovalStatus":"Approved","Documents":null},{"Id":2,"Name":"Holiday Consumer Campaign","Description":"Customers will be amazed at the breadth and depth of our product portfolio coming out for the holiday season.","Site":"https://p365ppetap10.spoppe.com/sites/spc/project2","Status":"Approved","VPApprover":"Dorena Paschke","VPApprovalStatus":"Approved","DirectorApprover":"Alex Darrow","DirectorApprovalStatus":"Approved","Documents":null},{"Id":3,"Name":"Back to School Campaign","Description":"This campaign will highlight the smart and fun new devices for students that let them work and play while looking cool.","Site":"https://p365ppetap10.spoppe.com/sites/spc/project3","Status":"Approved","VPApprover":"Dorena Paschke","VPApprovalStatus":"Approved","DirectorApprover":"Allie Bellew","DirectorApprovalStatus":"Approved","Documents":null},{"Id":4,"Name":"Enterprise Campaign","Description":"This campaign will highlight the enterprise readiness of our devices and services as well as their appeal for use at home.","Site":"https://p365ppetap10.spoppe.com/sites/spc/project4","Status":"Approved","VPApprover":"Dorena Paschke","VPApprovalStatus":"Approved","DirectorApprover":"David Longmuir","DirectorApprovalStatus":"Approved","Documents":null},{"Id":52,"Name":"Spring into Savings","Description":"Annual Spring savings campaign","Site":null,"Status":"Pending","VPApprover":"Dorena Paschke","VPApprovalStatus":"Pending","DirectorApprover":"David Longmuir","DirectorApprovalStatus":"Pending","Documents":null},{"Id":53,"Name":"Three\u0027s the charm","Description":"Buy three regularly priced items of $50 or more and receive the Contoso electronic charm bracelet starter for free!","Site":null,"Status":"Pending","VPApprover":"Dorena Paschke","VPApprovalStatus":"Pending","DirectorApprover":"Anne Wallace","DirectorApprovalStatus":"Pending","Documents":null},{"Id":55,"Name":"Conos sound campaign","Description":"Sonos ","Site":"https://p365ppetap10.spoppe.com/sites/spc/project55","Status":"Approved","VPApprover":"Dorena Paschke","VPApprovalStatus":"Approved","DirectorApprover":"Alex Darrow","DirectorApprovalStatus":"Approved","Documents":null}]</string>
+    <string name="heading_approvers">Approver</string>
+    <string name="approve">Approve</string>
+    <string name="CurrentUserName">Dorena Paschke</string>
+    <string name="action_refresh">Refresh</string>
+    <string name="login_name">O365 Login</string>
+    <string name="client_id">OAuth Client ID</string>
+    <string name="site_url">SharePoint Site Url</string>
+    <string name="redirect_uri">Redirect URI</string>
+    <string name="configure_button">Authenticate &amp; Create List</string>
+    <string name="title_application_settings">Application Settings</string>
+    <string name="hint_userid">\@.onmicrosoft.com</string>
+    <string name="hint_sharepoint_site">https://.sharepoint.com/</string>
+    <string name="hint_client_id">Client ID for this application from Azure AD</string>
+    <string name="hint_redirect_url">Redirect URI for this application in Azure AD</string>
+    <string name="hint_sharepoint_site_Url">https://tenant.sharepoint.com/sample</string>
+    <string name="button_launch">Launch</string>
+    <string name="text_sample_intro">This sample requires an existing site on SharePoint Online and a configured client application in the Microsoft Azure account associated with the Office 365 subscription used for the SharePoint site. The full set of app settings will be derived from the data entered above. To review the full set, tap the settings button in the menu bar.</string>
+    <string name="hint_user_id">userid@tenant.onmicrosoft.com</string>
+    <string name="sample_approver">Dorena Paschke</string>
+    <string name="descr_sharepoint_logo">SharePoint Logo</string>
+    <string name="descr_divider">Divider</string>
+    <string name="descr_approver_image">Image of approver</string>
+    <string name="descr_reject_button">Reject button</string>
+    <string name="descr_approve_button">Approve button</string>
+    <string name="descr_status_pending">Status pending</string>
+    <string name="zero">0</string>
+
+</resources>

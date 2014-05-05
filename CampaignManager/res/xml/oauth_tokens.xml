@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <PreferenceCategory android:title="OAuth Tokens" >
+        <EditTextPreference
+            android:name="accessToken"
+            android:defaultValue=""
+            android:key="prefAccessToken"
+            android:summary="Current Access Token"
+            android:title="Access Token" >
+        </EditTextPreference>
+        <EditTextPreference
+            android:name="accessTokenExpiresOn"
+            android:defaultValue=""
+            android:key="prefAccessTokenExpiresOn"
+            android:summary="Access Token expiration date"
+            android:title="Access Token Expiration Date" >
+        </EditTextPreference>
+        <EditTextPreference
+            android:name="refreshToken"
+            android:defaultValue=""
+            android:key="prefRefreshToken"
+            android:summary="Refresh Token"
+            android:title="Refresh Token" >
+        </EditTextPreference>
+        
+        </PreferenceCategory>
+
+</PreferenceScreen>

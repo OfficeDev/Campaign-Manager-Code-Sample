@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.microsoft.campaignmanager"
+    android:versionCode="1"
+    android:versionName="1.0" >
+
+    <uses-sdk
+        android:minSdkVersion="18"
+        android:targetSdkVersion="18" />
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
+    <application
+        android:name="com.microsoft.campaignmanager.CampaignApplication"
+        android:allowBackup="true"
+        android:icon="@drawable/contoso_96"
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme" >
+        <activity
+            android:name="com.microsoft.adal.AuthenticationActivity"
+            android:label="@string/title_login_hello_app" >
+        </activity>
+        <activity
+            android:name="com.microsoft.campaignmanager.AppSettingsActivity"
+            android:label="@string/title_app_settings" >
+        </activity>
+        <activity
+            android:name="com.microsoft.campaignmanager.OAuthSettingsActivity"
+            android:label="@string/title_oauth_settings" >
+        </activity>
+        <activity
+            android:name="com.microsoft.campaignmanager.OAuthTokensActivity"
+            android:label="@string/title_oauth_tokens" >
+        </activity>
+        
+        <activity
+            android:name="com.microsoft.campaignmanager.NTLMSettingsActivity"
+            android:label="@string/title_ntlm_settings" >
+        </activity>
+        <activity
+            android:name="com.microsoft.campaignmanager.CampaignManagerActivity"
+            android:label="@string/app_name" >
+        </activity>
+        <activity
+            android:name="com.microsoft.campaignmanager.MainActivity"
+            android:label="@string/app_name" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+    </application>
+
+</manifest>
