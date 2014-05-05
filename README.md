@@ -4,6 +4,7 @@ The Campaign Manager Android App was first demoed at the SharePoint Conference 2
 
 **Table of Contents**
 - [Overview](#overview)
+- [Quick Start](#quick-start)
 - [Environment Setup](#environment-setup)
 - [Related Resource](#related-resource)
 
