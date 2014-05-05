@@ -14,7 +14,7 @@ The Campaign Manager Android App was built to demonstrate the power of the new O
 ## Quick start ##
 If you just wish to demo the Android App without pulling the code and compiling, you can just grab the [APK file](https://github.com/OfficeDev/Campaign-Manager-Code-Sample/tree/master/AppPackage) and upload it to your Android Device. There is a configuration step when you launch the app to provide all your environmental information for Office 365.
 
-## Envionment Setup ##
+## Environment Setup ##
 We understand a fair few of you may not have done Android development before, so we have provided a [set up guide](https://github.com/OfficeDev/Campaign-Manager-Code-Sample/blob/master/Documents/IDE%20Setup%20Instructions.txt) to get you on your way with Eclipse.
 
 ## Related Resource ##
