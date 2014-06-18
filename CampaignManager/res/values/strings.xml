@@ -44,5 +44,7 @@
     <string name="descr_approve_button">Approve button</string>
     <string name="descr_status_pending">Status pending</string>
     <string name="zero">0</string>
+    <string name="notifications_api_key">Google Notifications Server API Key</string>
+    <string name="notifications_azure_connectionstring">Azure Notifications Hub Connection String</string>
 
 </resources>

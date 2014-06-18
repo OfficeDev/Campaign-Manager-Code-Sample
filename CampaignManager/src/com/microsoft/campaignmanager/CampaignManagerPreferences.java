@@ -195,7 +195,7 @@ public class CampaignManagerPreferences {
 	public String getDefaultSharepointList() {
 		return mPreferences.getString("prefDefaultList", null);
 	}
-
+	
 	/**
 	 * Store sharepoint list url.
 	 *
