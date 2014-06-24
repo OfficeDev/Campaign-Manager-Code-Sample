@@ -74,6 +74,26 @@
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <TextView
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="10dp"
+        android:text="@string/textview_appcreationwarning"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <Button
+        android:id="@+id/createAppButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:text="@string/button_CreateApp" />
+
+    <TextView
         android:id="@+id/textClientId"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -124,6 +144,7 @@
         android:layout_marginBottom="10dp"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
+        android:enabled="false"
         android:text="@string/configure_button" />
 
     <Button
@@ -132,6 +153,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="10dp"
         android:layout_marginLeft="20dp"
+        android:enabled="false"
         android:text="@string/button_launch" />
 
 </LinearLayout>

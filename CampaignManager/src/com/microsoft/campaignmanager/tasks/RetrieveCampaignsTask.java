@@ -49,7 +49,7 @@ public class RetrieveCampaignsTask extends AsyncTask<String, Void, ArrayList<Cam
 		mContext = activity;
 		mDialog = new ProgressDialog(mContext);
 		mApplication = (CampaignApplication) activity.getApplication();
-		mApplication.authenticate(activity);
+		mApplication.authenticateToSharePoint(activity);
 		mSource = new CampaignItemsDataSource(mApplication);
 		mSectionNumber = sectionNumber;
 	}

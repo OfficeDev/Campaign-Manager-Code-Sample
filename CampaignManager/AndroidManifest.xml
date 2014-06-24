@@ -35,10 +35,6 @@
         </activity>
         
         <activity
-            android:name="com.microsoft.campaignmanager.NTLMSettingsActivity"
-            android:label="@string/title_ntlm_settings" >
-        </activity>
-        <activity
             android:name="com.microsoft.campaignmanager.CampaignManagerActivity"
             android:label="@string/app_name" >
         </activity>

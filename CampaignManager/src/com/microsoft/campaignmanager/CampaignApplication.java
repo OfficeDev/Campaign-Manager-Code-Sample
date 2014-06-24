@@ -18,6 +18,7 @@ import android.widget.Toast;
 
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.SettableFuture;
+import com.microsoft.campaignmanager.datasource.GraphClient;
 import com.microsoft.campaignmanager.datasource.SPUser;
 import com.microsoft.campaignmanager.datasource.SharePointListsClientWithUsers;
 import com.microsoft.office365.Credentials;
@@ -38,12 +39,18 @@ public class CampaignApplication extends Application {
 	private CampaignManagerPreferences mPreferences;
 
 	/** The m credentials. */
-	private Credentials mCredentials;
+	private Credentials mGraphCredentials;
+	private Credentials mSharePointCredentials;
+	
 
 	/** The m sharepoint lists client. */
 	private SharePointListsClientWithUsers mSharepointListsClient;
+	
+	private GraphClient mGraphClient;
 
 	private SPUser mCurrentUser;
+	
+	private String mTag = "CampaignManager";
 
 
 	/*(non-Javadoc)
@@ -61,22 +68,20 @@ public class CampaignApplication extends Application {
 
 	}
 
-	/**
-	 * Gets the credentials.
-	 *
-	 * @return the credentials
-	 */
-	public Credentials getCredentials() {
-		return mCredentials;
+	public Credentials getSharePointCredentials() {
+		return mSharePointCredentials;
 	}
 
-	/**
-	 * Sets the credentials.
-	 *
-	 * @param credentials the new credentials
-	 */
-	public void setCredentials(Credentials credentials) {
-		mCredentials = credentials;
+	public Credentials getGraphCredentials() {
+		return mGraphCredentials;
+	}
+
+	public void setSharePointCredentials(Credentials credentials) {
+		mSharePointCredentials = credentials;
+	}
+
+	public void setGraphCredentials(Credentials credentials) {
+		mGraphCredentials = credentials;
 	}
 
 	public SPUser getCurrentUser() {
@@ -94,7 +99,7 @@ public class CampaignApplication extends Application {
 	 */
 	public void handleError(Throwable throwable) {
 		Toast.makeText(this, throwable.getMessage(), Toast.LENGTH_LONG).show();
-		Log.e("Asset", throwable.toString());
+		Log.e(mTag, throwable.toString());
 	}
 
 	/**
@@ -103,18 +108,30 @@ public class CampaignApplication extends Application {
 	 * @param activity the activity
 	 * @return the office future
 	 */
-	public ListenableFuture<Credentials> authenticate(Activity activity) {
+	public ListenableFuture<Credentials> authenticateToSharePoint(Activity activity) {
 		final SettableFuture<Credentials> result = SettableFuture.create();
 
 		String method = mPreferences.getAuthenticationMethod();
 		//only OAuth is supported in this sample
 		if (method.equals("OAUTH")){
 			String accessToken = mPreferences.getAccessToken();
-			mCredentials = new OAuthCredentials(accessToken);
+			mSharePointCredentials = new OAuthCredentials(accessToken);
 		}
 		return result;
 	}
 
+	public ListenableFuture<Credentials> authenticateToGraphAPI(Activity activity) {
+		final SettableFuture<Credentials> result = SettableFuture.create();
+
+		String method = mPreferences.getAuthenticationMethod();
+		//only OAuth is supported in this sample
+		if (method.equals("OAUTH")){
+			String accessToken = mPreferences.getGraphAccessToken();
+			mGraphCredentials = new OAuthCredentials(accessToken);
+		}
+		return result;
+	}
+	
 	/**
 	 * Checks for configuration settings.
 	 *
@@ -136,6 +153,24 @@ public class CampaignApplication extends Application {
 		String userHint = mPreferences.getUserHint();
 		boolean result = (!isNullOrEmpty(authorityUrl)) && (!isNullOrEmpty(clientId))
 				&& (!isNullOrEmpty(resourceUrl)) && (!isNullOrEmpty(userHint));
+		return result;
+
+	}
+	public boolean hasBootstrapConfigurationSettings() {
+
+		String authenticationMethod = mPreferences.getAuthenticationMethod();
+		if (isNullOrEmpty(authenticationMethod))
+			return false;
+
+		if (isNullOrEmpty(mPreferences.getLibraryName()))
+			return false;
+
+		// check OAuth Settings
+		String userHint = mPreferences.getUserHint();
+		String serverUrl = mPreferences.getSharepointServer();
+		String siteUrl = mPreferences.getSiteRelativeUrl();
+		boolean result = (!isNullOrEmpty(serverUrl)) && (!isNullOrEmpty(siteUrl))
+				 && (!isNullOrEmpty(userHint));
 		return result;
 
 	}
@@ -209,16 +244,27 @@ public class CampaignApplication extends Application {
 	public SharePointListsClientWithUsers getCurrentListClient() {
 		String serverUrl = mPreferences.getSharepointServer();
 		String siteRelativeUrl = mPreferences.getSiteRelativeUrl();
-		Credentials credentials = getCredentials();
+		Credentials credentials = getSharePointCredentials();
 		mSharepointListsClient = new SharePointListsClientWithUsers(serverUrl, siteRelativeUrl,
 				credentials, new Logger() {
 
 			@Override
 			public void log(String message, LogLevel level) {
-				Log.d("Asset", message);
+				Log.d(mTag, message);
 			}
 		});
 		return mSharepointListsClient;
+	}
+	public GraphClient getCurrentGraphClient() {
+		Credentials credentials = getGraphCredentials();
+		mGraphClient = new GraphClient(credentials, mPreferences.getTenantId(), new Logger() {
+
+			@Override
+			public void log(String message, LogLevel level) {
+				Log.d(mTag, message);
+			}
+		});
+		return mGraphClient;
 	}
 
 	/**
@@ -232,7 +278,7 @@ public class CampaignApplication extends Application {
 			//return client.getUserProperties().get();
 			return client.getCurrentUser().get();
 		} catch (Throwable t) {
-			Log.d("Asset", t.getMessage());
+			Log.d(mTag, t.getMessage());
 		}
 		return null;
 	}

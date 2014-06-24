@@ -5,7 +5,6 @@
 	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
 	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.LIBRARIES"/>
 	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.DEPENDENCIES"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/com.microsoft.adal"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/office365-base-sdk"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/office365-lists-sdk"/>
 	<classpathentry kind="output" path="bin/classes"/>

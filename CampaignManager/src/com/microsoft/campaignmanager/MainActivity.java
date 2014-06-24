@@ -15,6 +15,7 @@ import com.microsoft.adal.PromptBehavior;
 import com.microsoft.campaignmanager.AppSettingsActivity;
 import com.microsoft.campaignmanager.MainActivity;
 import com.microsoft.campaignmanager.tasks.CreateCampaignListTask;
+import com.microsoft.campaignmanager.tasks.CreateCampaignManagerApplicationTask;
 
 import android.app.Activity;
 import android.app.ActionBar;
@@ -74,20 +75,29 @@ public class MainActivity extends Activity {
 		mPreferences = new CampaignManagerPreferences(appContext,
 				PreferenceManager.getDefaultSharedPreferences(this));
 
+		boolean hasBootstrapConfig = mApplication.hasBootstrapConfigurationSettings();
 		boolean hasConfig = mApplication.hasConfigurationSettings()
 				&& mApplication.hasDefaultList();
-		if (hasConfig) {
+		if (hasBootstrapConfig && !hasConfig){
 			try {
-				authenticateWithOAuth();
+				authenticateWithOAuthToGraphAPI();
 			} catch (Throwable t) {
 				Log.e("MainActivity", t.getMessage());
-			}
+			}			
 		} else {
-			if(!preferencesAreComplete()) {
-				if (savedInstanceState == null) {
-					getFragmentManager().beginTransaction()
-					.add(R.id.container, new PlaceholderFragment())
-					.commit();
+			if (hasConfig) {
+				try {
+					authenticateWithOAuthToSharePoint();
+				} catch (Throwable t) {
+					Log.e("MainActivity", t.getMessage());
+				}
+			} else {
+				if(!preferencesAreComplete()) {
+					if (savedInstanceState == null) {
+						getFragmentManager().beginTransaction()
+						.add(R.id.container, new PlaceholderFragment())
+						.commit();
+					}
 				}
 			}
 		}
@@ -123,6 +133,10 @@ public class MainActivity extends Activity {
 			return true;
 		}
 	}
+	
+	public CampaignManagerPreferences getPreferences() {
+		return mPreferences;
+	}
 
 	/**
 	 * Check preferences.
@@ -137,6 +151,7 @@ public class MainActivity extends Activity {
 	}
 
 
+	//	Authentication callback for when configuration is complete
 	private AuthenticationCallback<AuthenticationResult> callback = new AuthenticationCallback<AuthenticationResult>() {
 
 		@Override
@@ -187,59 +202,162 @@ public class MainActivity extends Activity {
 		}
 	};
 
+	// Authentication callback for initial bootstrapping
+	private AuthenticationCallback<AuthenticationResult> graphCallback = new AuthenticationCallback<AuthenticationResult>() {
 
-	private void authenticateWithOAuth() {
+		@Override
+		public void onError(Exception exc) {
+			if (exc instanceof AuthenticationException) {
+				//textViewStatus.setText("Cancelled");
+				Log.d(TAG, "Cancelled");
+			} else {
+				//textViewStatus.setText("Authentication error:" + exc.getMessage());
+				Log.d(TAG, "Authentication error:" + exc.getMessage());
+			}
+		}
+
+		@Override
+		public void onSuccess(AuthenticationResult result) {
+			mResult = result;
+
+			if (result == null || result.getAccessToken() == null
+					|| result.getAccessToken().isEmpty()) {
+				//textViewStatus.setText("Token is empty");
+				Log.d(TAG, "Token is empty");
+			} else {
+				// request is successful
+				Log.d(TAG, "Status:" + result.getStatus() + " Expired:"
+						+ result.getExpiresOn().toString());
+				// Store tokens in App Settings, so they can be viewed and used
+				// by other activities
+				mPreferences.setGraphAccessToken(result.getAccessToken());
+				mPreferences.setGraphAccessTokenExpiresOn(result.getExpiresOn().toString());
+				mPreferences.setGraphRefreshToken(result.getRefreshToken());
+
+				// Create the application in Azure AD
+				createApplication();
+
+			}
+		}
+	};
+
+
+	private void authenticateWithOAuthToSharePoint() {
 		Logger.v(TAG, "get Token");
 
-		 String resource = mPreferences.getResourceUrl();
-		 if (resource == null || resource.isEmpty()) {
-			 Log.e(TAG,"Resource has not been configured in app settings.");
-		 }
+		String resource = mPreferences.getResourceUrl();
+		if (resource == null || resource.isEmpty()) {
+			Log.e(TAG,"Resource has not been configured in app settings.");
+		}
 
-		 String clientId = mPreferences.getClientId();
-		 if (clientId == null || clientId.isEmpty()) {
-			 Log.e(TAG,"Client ID has not been configured in app settings.");
-		 }
+		String clientId = mPreferences.getClientId();
+		if (clientId == null || clientId.isEmpty()) {
+			Log.e(TAG,"Client ID has not been configured in app settings.");
+		}
 
-		 // Optional field, so acquireToken accepts null fields
-		 String userid = mPreferences.getUserHint();
+		// Optional field, so acquireToken accepts null fields
+		String userid = mPreferences.getUserHint();
 
-		 try {
-			 mContext = new AuthenticationContext(MainActivity.this, mPreferences.getAuthorityUrl(), true);
-		 } catch (NoSuchAlgorithmException e) {
-			 // TODO Auto-generated catch block
-			 e.printStackTrace();
-		 } catch (NoSuchPaddingException e) {
-			 // TODO Auto-generated catch block
-			 e.printStackTrace();
-		 }
-		 // Optional field, so acquireToken accepts null fields
-		 mResult = null;
-		 //				mContext.setRequestCorrelationId(mRequestCorrelationId);
+		try {
+			mContext = new AuthenticationContext(MainActivity.this, mPreferences.getAuthorityUrl(), true);
+		} catch (NoSuchAlgorithmException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (NoSuchPaddingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		// Optional field, so acquireToken accepts null fields
+		mResult = null;
+		//				mContext.setRequestCorrelationId(mRequestCorrelationId);
 
-		 mContext.acquireToken(MainActivity.this, resource, clientId, mPreferences.getRedirectUrl(), userid, PromptBehavior.Auto, "",
-				 callback);
+		mContext.acquireToken(MainActivity.this, resource, clientId, mPreferences.getRedirectUrl(), userid, PromptBehavior.Auto, "",
+				callback);
+	}
+
+	private void authenticateWithOAuthToGraphAPI() {
+		Logger.v(TAG, "get Token");
+		// We'll use the graph api to create the application
+		mPreferences.setGraphResourceUrl("https://graph.windows.net");
+		mPreferences.setGraphRedirectUrl("http://localhost");
+		// Global Client ID configured by app owner
+		// Used only to create an Application  for the actual Campaign Manager demo
+		// in Azure AD on the Office 365 subscription of the user
+		// This requires tenant admin permissions in O365
+		mPreferences.setGraphClientId("914a80b9-6cfb-4a88-b3fd-0cc40687293a");
+		// Authority Url is the same as for Campaign Manager proper
+		mPreferences.setGraphAuthorityUrl(mPreferences.getAuthorityUrl());
+
+		String resource = mPreferences.getGraphResourceUrl();
+		if (resource == null || resource.isEmpty()) {
+			Log.e(TAG,"Resource has not been configured in app settings.");
+		}
+
+		String clientId = mPreferences.getGraphClientId();
+		if (clientId == null || clientId.isEmpty()) {
+			Log.e(TAG,"Client ID has not been configured in app settings.");
+		}
+
+		// Optional field, so acquireToken accepts null fields
+		String userid = mPreferences.getUserHint();
+
+		try {
+			mContext = new AuthenticationContext(MainActivity.this, mPreferences.getGraphAuthorityUrl(), true);
+		} catch (NoSuchAlgorithmException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (NoSuchPaddingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		// Optional field, so acquireToken accepts null fields
+		mResult = null;
+		//				mContext.setRequestCorrelationId(mRequestCorrelationId);
+
+		mContext.acquireToken(MainActivity.this, resource, clientId, mPreferences.getGraphRedirectUrl(), userid, PromptBehavior.Auto, "",
+				graphCallback);
 	}
 
 	private void createList() {
-		mApplication.authenticate(this);
+		mApplication.authenticateToSharePoint(this);
 		new CreateCampaignListTask(this).execute();
 	}
 
+	private void createApplication() {
+		mApplication.authenticateToGraphAPI(this);
+		new CreateCampaignManagerApplicationTask(this).execute();
+	}
+	
 	public static class PlaceholderFragment extends Fragment {
+
+
 
 		public PlaceholderFragment() {
 		}
 
+		CampaignManagerPreferences mPreferences;
+		
 		@Override
 		public View onCreateView(LayoutInflater inflater, ViewGroup container,
 				Bundle savedInstanceState) {
 			View rootView = inflater.inflate(R.layout.fragment_easysettings, container, false);
+
+			MainActivity activity = (MainActivity) this.getActivity();
+			mPreferences = activity.getPreferences();
+
+			Button createAppButton = (Button) rootView.findViewById(R.id.createAppButton);
+			createAppButton.setOnClickListener(new OnClickListener() {
+				public void onClick(View v) {
+					configureApp(v);
+					((MainActivity) getActivity()).authenticateWithOAuthToGraphAPI();
+				}				
+			});
 			Button configureButton = (Button) rootView.findViewById(R.id.configureButton);
 			configureButton.setOnClickListener(new OnClickListener() {
 				public void onClick(View v) {
+					updateSettingsView(v);
 					configureApp(v);
-					((MainActivity) getActivity()).authenticateWithOAuth();
+					((MainActivity) getActivity()).authenticateWithOAuthToSharePoint();
 				}				
 			});
 			Button launchButton = (Button) rootView.findViewById(R.id.launchButton);
@@ -253,14 +371,33 @@ public class MainActivity extends Activity {
 
 			return rootView;
 		}
+		
+		private void updateSettingsView(View v)
+		{
+			View rootView = v.getRootView();
+			
+			String clientId = mPreferences.getClientId();
+			String redirectUrl = mPreferences.getRedirectUrl();
+			if(clientId != null && clientId != "" && redirectUrl != null && redirectUrl != "")
+			{
+				Button configureButton = (Button) rootView.findViewById(R.id.configureButton);
+				configureButton.setEnabled(true);
 
+				EditText clientIdField = (EditText) rootView.findViewById(R.id.editClientId);
+				clientIdField.setText(clientId);
+
+				EditText redirectUrlField = (EditText) rootView.findViewById(R.id.editRedirectUri);
+				redirectUrlField.setText(redirectUrl);	
+			}
+		}
+			
 		private void configureApp(View v) {
 			View rootView = v.getRootView();
 			String loginName = ((EditText) rootView.findViewById(R.id.editLoginName)).getText().toString();
 			String siteUrl = ((EditText) rootView.findViewById(R.id.editSiteUrl)).getText().toString();
 			String clientId = ((EditText) rootView.findViewById(R.id.editClientId)).getText().toString();
 			String redirectUri = ((EditText) rootView.findViewById(R.id.editRedirectUri)).getText().toString();
-
+			
 			// Generate app settings from simplified settings
 			String sharePointBaseUrl = getSharePointBaseUrl(siteUrl);
 			String resourceUrl = sharePointBaseUrl;
@@ -279,6 +416,7 @@ public class MainActivity extends Activity {
 			prefs.setResourceUrl(resourceUrl);
 			prefs.setUserHint(loginName);
 			prefs.setLibraryName("Campaigns");
+			prefs.setTenantId(getTenantId(loginName));
 		}
 
 		private String getSharePointBaseUrl(String siteAddress) {
@@ -308,9 +446,18 @@ public class MainActivity extends Activity {
 
 		private String getAuthorityUrl(String loginName) {
 			if(isValidEmail(loginName)){
-				String[] splitString = loginName.split("@");
-				String authorityUrl = "https://login.windows.net/" + splitString[1];
+				String authorityUrl = "https://login.windows.net/" + getTenantId(loginName);
 				return authorityUrl;
+			}
+			return null;
+
+		}
+		
+		private String getTenantId(String loginName) {
+			if(isValidEmail(loginName)){
+				String[] splitString = loginName.split("@");
+				String tenantId = splitString[1];
+				return tenantId;
 			}
 			return null;
 

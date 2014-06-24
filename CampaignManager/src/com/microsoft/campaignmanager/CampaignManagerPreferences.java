@@ -68,6 +68,71 @@ public class CampaignManagerPreferences {
 		return "OAUTH";
 	}
 
+	public String getGraphAuthorityUrl() {
+		return mPreferences.getString("prefGraphOauthAuthorityUrl", null);
+	}
+
+	public void setGraphAuthorityUrl(String value) {
+		mPreferences.edit().putString("prefGraphOauthAuthorityUrl", value).commit();
+	}
+	
+	public String getGraphClientId() {
+		return mPreferences.getString("prefGraphOauthClientId", null);
+	}
+
+	public void setGraphClientId(String value) {
+		mPreferences.edit().putString("prefGraphOauthClientId", value).commit();
+	}
+
+	public String getGraphResourceUrl() {
+		return mPreferences.getString("prefGraphOauthResourceUrl", null);
+	}
+
+	public void setGraphResourceUrl(String value) {
+		mPreferences.edit().putString("prefGraphOauthResourceUrl", value).commit();
+	}
+
+	
+	public String getGraphRedirectUrl() {
+		return mPreferences.getString("prefGraphOauthRedirectUrl", null);
+	}
+
+	public void setGraphRedirectUrl(String value) {
+		mPreferences.edit().putString("prefGraphOauthRedirectUrl", value).commit();
+	}
+	
+	public String getTenantId() {
+		return mPreferences.getString("prefTenantId", null);
+	}
+
+	public void setTenantId(String value) {
+		mPreferences.edit().putString("prefTenantId", value).commit();
+	}
+	
+	public String getGraphAccessToken() {
+		return mPreferences.getString("prefGraphAccessToken", null);
+	}
+
+	public void setGraphAccessToken(String value) {
+		mPreferences.edit().putString("prefGraphAccessToken", value).commit();
+	}
+
+	public String getGraphAccessTokenExpiresOn() {
+		return mPreferences.getString("prefGraphAccessTokenExpiresOn", null);
+	}
+
+	public void setGraphAccessTokenExpiresOn(String value) {
+		mPreferences.edit().putString("prefGraphAccessTokenExpiresOn", value).commit();
+	}
+
+	public String getGraphRefreshToken() {
+		return mPreferences.getString("prefGraphRefreshToken", null);
+	}
+
+	public void setGraphRefreshToken(String value) {
+		mPreferences.edit().putString("prefGraphRefreshToken", value).commit();
+	}
+	
 	/**
 	 * Gets the sharepoint server.
 	 *
@@ -93,7 +158,7 @@ public class CampaignManagerPreferences {
 	public void setSiteRelativeUrl(String value) {
 		mPreferences.edit().putString("prefSiteRelativeUrl", value).commit();
 	}
-
+	
 	/**
 	 * Gets the authority url.
 	 *
@@ -120,6 +185,8 @@ public class CampaignManagerPreferences {
 		mPreferences.edit().putString("prefOauthClientId", value).commit();
 	}
 
+
+	
 	/**
 	 * Gets the resource url.
 	 *
