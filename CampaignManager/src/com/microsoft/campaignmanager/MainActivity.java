@@ -32,6 +32,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnFocusChangeListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
@@ -352,6 +353,7 @@ public class MainActivity extends Activity {
 					((MainActivity) getActivity()).authenticateWithOAuthToGraphAPI();
 				}				
 			});
+			
 			Button configureButton = (Button) rootView.findViewById(R.id.configureButton);
 			configureButton.setOnClickListener(new OnClickListener() {
 				public void onClick(View v) {
@@ -360,6 +362,7 @@ public class MainActivity extends Activity {
 					((MainActivity) getActivity()).authenticateWithOAuthToSharePoint();
 				}				
 			});
+			
 			Button launchButton = (Button) rootView.findViewById(R.id.launchButton);
 			launchButton.setEnabled(false);
 			launchButton.setOnClickListener(new OnClickListener() {
@@ -368,14 +371,30 @@ public class MainActivity extends Activity {
 							CampaignManagerActivity.class));
 				}				
 			});
-
+			
+			createAppButton.setOnFocusChangeListener(new OnFocusChangeListener() {
+				@Override
+				public void onFocusChange(View v, boolean hasFocus) {
+					updateSettingsView(v);
+				}
+			});
+			
+			EditText clientIdField = (EditText) rootView.findViewById(R.id.editClientId);
+			clientIdField.setOnFocusChangeListener(new OnFocusChangeListener() {
+				@Override
+				public void onFocusChange(View v, boolean hasFocus) {
+					if(hasFocus)
+						updateSettingsView(v);
+				}
+			});
+			
 			return rootView;
 		}
 		
 		private void updateSettingsView(View v)
 		{
 			View rootView = v.getRootView();
-			
+			// make sure the clientId and redirectUri are reflected in the view based	
 			String clientId = mPreferences.getClientId();
 			String redirectUrl = mPreferences.getRedirectUrl();
 			if(clientId != null && clientId != "" && redirectUrl != null && redirectUrl != "")
