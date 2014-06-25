@@ -7,8 +7,6 @@ import java.util.Map;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.microsoft.office365.OfficeEntity;
-
 // TODO: Auto-generated Javadoc
 /**
  * The Class GraphServicePrincipal.

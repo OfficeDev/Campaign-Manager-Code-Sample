@@ -1,6 +1,5 @@
 package com.microsoft.campaignmanager.datasource;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -11,10 +10,6 @@ import java.util.Map;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import android.text.format.DateFormat;
-
-import com.microsoft.office365.OfficeEntity;
 
 // TODO: Auto-generated Javadoc
 /**

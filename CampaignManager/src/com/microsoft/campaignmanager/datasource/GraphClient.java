@@ -5,11 +5,9 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -145,7 +143,6 @@ public class GraphClient {
 						byte[] responseContentBytes = response.readAllBytes();
 						result.set(responseContentBytes);
 					} else {
-						String responseMsg = response.readToEnd();
 						result.setException(new Exception("Invalid status code " + statusCode + ": "
 								+ response.readToEnd()));
 
@@ -178,7 +175,7 @@ public class GraphClient {
 			public void onSuccess(byte[] b) {
 				String string;
 				try {
-					string = new String(b, Constants.UTF8_NAME);
+					string = new String(b, GraphConstants.UTF8_NAME);
 					if (string == null || string.length() == 0) {
 						result.set(null);
 					} else {
@@ -228,7 +225,7 @@ public class GraphClient {
 	protected String urlEncode(String str) {
 		String encoded = null;
 		try {
-			encoded = URLEncoder.encode(str, Constants.UTF8_NAME);
+			encoded = URLEncoder.encode(str, GraphConstants.UTF8_NAME);
 		} catch (UnsupportedEncodingException e) {
 			encoded = str;
 		}
@@ -244,7 +241,7 @@ public class GraphClient {
 
 	private byte[] getBytes(String s) {
 		try {
-			return s.getBytes(Constants.UTF8_NAME);
+			return s.getBytes(GraphConstants.UTF8_NAME);
 		} catch (UnsupportedEncodingException e) {
 			return s.getBytes();
 		}
@@ -253,69 +250,11 @@ public class GraphClient {
 	//
 	// Operations on Graph API Objects
 	//
-	public ListenableFuture<List<GraphApplication>> getAllApplications() {
-		final SettableFuture<List<GraphApplication>> result = SettableFuture.create();
-
-		String graphResource = String.format("applications?%s", mApiVersion);
-		String getApplicationUrl = String.format("%s/%s/%s", Constants.AAD_GRAPHURL, "0df85549-0da0-4ee0-b7f0-ee7be7d4ca01", graphResource);
-		
-		
-		ListenableFuture<JSONObject> request = executeRequestJson(getApplicationUrl, Constants.HTTP_GET);
-
-		Futures.addCallback(request, new FutureCallback<JSONObject>() {
-			@Override
-			public void onFailure(Throwable t) {
-				result.setException(t);
-			}
-
-			@Override
-			public void onSuccess(JSONObject json) {
-				try {
-					result.set(GraphApplication.listFromJson(json));
-				} catch (JSONException e) {
-					Log.e(mTag, e.getMessage());
-				}
-			}
-		});
-
-		return result;
-	}
-
-	public ListenableFuture<List<GraphApplication>> getApplicationByName(String displayName) {
-		final SettableFuture<List<GraphApplication>> result = SettableFuture.create();
-
-		String graphResource = String.format("applications?%s", mApiVersion);
-		String odataFilter = urlEncode(String.format("filter=displayName eq '%s'", displayName));
-		String getApplicationUrl = String.format("%s/%s/%s&", Constants.AAD_GRAPHURL, mTenantId, 
-				graphResource, odataFilter);
-		ListenableFuture<JSONObject> request = executeRequestJson(getApplicationUrl, Constants.HTTP_GET);
-
-		Futures.addCallback(request, new FutureCallback<JSONObject>() {
-			@Override
-			public void onFailure(Throwable t) {
-				result.setException(t);
-			}
-
-			@Override
-			public void onSuccess(JSONObject json) {
-				try {
-					result.set(GraphApplication.listFromJson(json));
-				} catch (JSONException e) {
-					Log.e(mTag, e.getMessage());
-				}
-			}
-		});
-
-		return result;
-	}
-
-
 	public ListenableFuture<GraphApplication> createApplication(final GraphApplication application) {
 		final SettableFuture<GraphApplication> result = SettableFuture.create();
 
 		String graphResource = String.format("applications?%s", mApiVersion);
-		String postApplicationUrl = String.format("%s/%s/%s", Constants.AAD_GRAPHURL, mTenantId, graphResource);
-		//String postApplicationUrl = String.format("%s/%s/%s", Constants.AAD_GRAPHURL, "0df85549-0da0-4ee0-b7f0-ee7be7d4ca01", graphResource);
+		String postApplicationUrl = String.format("%s/%s/%s", GraphConstants.AAD_GRAPHURL, mTenantId, graphResource);
 
 		try {
 			String payloadString = "{\"displayName\":\"" + application.getDisplayName() 
@@ -353,8 +292,7 @@ public class GraphClient {
 		final SettableFuture<GraphServicePrincipal> result = SettableFuture.create();
 
 		String graphResource = String.format("servicePrincipals?%s", mApiVersion);
-		String postServicePrincipalUrl = String.format("%s/%s/%s", Constants.AAD_GRAPHURL, mTenantId, graphResource);
-		//String postApplicationUrl = String.format("%s/%s/%s", Constants.AAD_GRAPHURL, "0df85549-0da0-4ee0-b7f0-ee7be7d4ca01", graphResource);
+		String postServicePrincipalUrl = String.format("%s/%s/%s", GraphConstants.AAD_GRAPHURL, mTenantId, graphResource);
 
 		try {
 			String payloadString = "{\"displayName\":\"" + application.getDisplayName() + "\","
@@ -373,7 +311,6 @@ public class GraphClient {
 				@Override
 				public void onSuccess(JSONObject json) {
 					try {
-						//POST to applications will return a single Graph Application
 						GraphServicePrincipal newServicePrincipal = new GraphServicePrincipal();
 						newServicePrincipal.loadFromJson(json);
 						result.set(newServicePrincipal);
@@ -385,7 +322,6 @@ public class GraphClient {
 		} catch (Throwable t) {
 			result.setException(t);
 		}
-
 		return result;
 	}
 	
@@ -393,8 +329,7 @@ public class GraphClient {
 		final SettableFuture<GraphPermission> result = SettableFuture.create();
 
 		String graphResource = String.format("permissions?%s", mApiVersion);
-		String postPermissionUrl = String.format("%s/%s/%s", Constants.AAD_GRAPHURL, mTenantId, graphResource);
-		//String postApplicationUrl = String.format("%s/%s/%s", Constants.AAD_GRAPHURL, "0df85549-0da0-4ee0-b7f0-ee7be7d4ca01", graphResource);
+		String postPermissionUrl = String.format("%s/%s/%s", GraphConstants.AAD_GRAPHURL, mTenantId, graphResource);
 
 		try {
 			String payloadString = "{\"consentType\":\"" + permission.getConsentType() + "\","
@@ -427,7 +362,6 @@ public class GraphClient {
 		} catch (Throwable t) {
 			result.setException(t);
 		}
-
 		return result;
 	}
 

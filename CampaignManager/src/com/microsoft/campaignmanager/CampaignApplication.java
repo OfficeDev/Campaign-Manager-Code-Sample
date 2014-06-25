@@ -1,8 +1,3 @@
-/*******************************************************************************
- * Copyright (c) Microsoft Open Technologies, Inc.
- * All Rights Reserved
- * See License.txt in the project root for license information. 
- ******************************************************************************/
 package com.microsoft.campaignmanager;
 
 import java.util.ArrayList;
@@ -26,24 +21,15 @@ import com.microsoft.office365.LogLevel;
 import com.microsoft.office365.Logger;
 import com.microsoft.office365.http.OAuthCredentials;
 
-// TODO: Auto-generated Javadoc
-/**
- * The Class AssetApplication.
- */
 public class CampaignApplication extends Application {
 
-	/** The app context. */
 	private static Context appContext;
 
-	/** The m preferences. */
 	private CampaignManagerPreferences mPreferences;
 
-	/** The m credentials. */
 	private Credentials mGraphCredentials;
 	private Credentials mSharePointCredentials;
 	
-
-	/** The m sharepoint lists client. */
 	private SharePointListsClientWithUsers mSharepointListsClient;
 	
 	private GraphClient mGraphClient;
@@ -51,10 +37,6 @@ public class CampaignApplication extends Application {
 	private SPUser mCurrentUser;
 	
 	private String mTag = "CampaignManager";
-
-
-	/*(non-Javadoc)
-	 * @see android.app.Application#onCreate()*/
 
 	@Override
 	public void onCreate() {
@@ -92,22 +74,12 @@ public class CampaignApplication extends Application {
 			return mCurrentUser;
 		}
 	}
-	/**
-	 * Handle error.
-	 *
-	 * @param throwable the throwable
-	 */
+
 	public void handleError(Throwable throwable) {
 		Toast.makeText(this, throwable.getMessage(), Toast.LENGTH_LONG).show();
 		Log.e(mTag, throwable.toString());
 	}
 
-	/**
-	 * Authenticate.
-	 *
-	 * @param activity the activity
-	 * @return the office future
-	 */
 	public ListenableFuture<Credentials> authenticateToSharePoint(Activity activity) {
 		final SettableFuture<Credentials> result = SettableFuture.create();
 
@@ -132,11 +104,6 @@ public class CampaignApplication extends Application {
 		return result;
 	}
 	
-	/**
-	 * Checks for configuration settings.
-	 *
-	 * @return true, if successful
-	 */
 	public boolean hasConfigurationSettings() {
 
 		String authenticationMethod = mPreferences.getAuthenticationMethod();
@@ -156,8 +123,8 @@ public class CampaignApplication extends Application {
 		return result;
 
 	}
-	public boolean hasBootstrapConfigurationSettings() {
-
+	
+	public boolean hasBootstrapGraphConfigurationSettings() {
 		String authenticationMethod = mPreferences.getAuthenticationMethod();
 		if (isNullOrEmpty(authenticationMethod))
 			return false;
@@ -175,60 +142,28 @@ public class CampaignApplication extends Application {
 
 	}
 
-	/**
-	 * Checks if is null or empty.
-	 *
-	 * @param value the value
-	 * @return true, if is null or empty
-	 */
 	private boolean isNullOrEmpty(String value) {
-
 		return value == null || value.length() == 0;
 	}
 
-	/**
-	 * Store site url.
-	 *
-	 * @param url the url
-	 * @return the boolean
-	 */
 	public Boolean storeSiteUrl(String url) {
 		mPreferences.storeSharepointListUrl(url);
 		return true;
 	}
 
-	/**
-	 * Gets the stored lists.
-	 *
-	 * @return the stored lists
-	 */
 	public ArrayList<String> getStoredLists() {
 		return mPreferences.getSharepointListNames();
 	}
 
-	/**
-	 * Checks for default list.
-	 *
-	 * @return true, if successful
-	 */
 	public boolean hasDefaultList() {
 		return mPreferences.getLibraryName() != null;
 	}
 
-	/**
-	 * Gets the preferences.
-	 *
-	 * @return the preferences
-	 */
 	public CampaignManagerPreferences getPreferences() {
 		return mPreferences;
 	}
 
-	/**
-	 * Clear preferences.
-	 */
 	public void clearPreferences() {
-		// mPreferences.clear();
 		CookieSyncManager syncManager = CookieSyncManager.createInstance(this);
 		if (syncManager != null) {
 			CookieManager cookieManager = CookieManager.getInstance();
@@ -236,11 +171,6 @@ public class CampaignApplication extends Application {
 		}
 	}
 
-	/**
-	 * Gets the current list client.
-	 *
-	 * @return the current list client
-	 */
 	public SharePointListsClientWithUsers getCurrentListClient() {
 		String serverUrl = mPreferences.getSharepointServer();
 		String siteRelativeUrl = mPreferences.getSiteRelativeUrl();
@@ -255,6 +185,7 @@ public class CampaignApplication extends Application {
 		});
 		return mSharepointListsClient;
 	}
+	
 	public GraphClient getCurrentGraphClient() {
 		Credentials credentials = getGraphCredentials();
 		mGraphClient = new GraphClient(credentials, mPreferences.getTenantId(), new Logger() {
@@ -267,11 +198,6 @@ public class CampaignApplication extends Application {
 		return mGraphClient;
 	}
 
-	/**
-	 * Gets the account info.
-	 *
-	 * @return the account info
-	 */
 	public SPUser getAccountInfo() {
 		SharePointListsClientWithUsers client = getCurrentListClient();
 		try {

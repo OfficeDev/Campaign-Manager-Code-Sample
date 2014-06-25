@@ -3,7 +3,7 @@
  
     <string name="app_name">Campaign Manager</string>
     <string name="action_settings">Settings</string>
-    <string name="title_login_hello_app">Log on to Office 365</string>
+    <string name="title_login_hello_app">Log on to Office 365 through Azure Active Directory</string>
     <string name="title_app_settings">Settings</string>
     <string name="title_oauth_settings">Settings</string>
     <string name="title_oauth_tokens">Settings</string>
@@ -21,15 +21,15 @@
     <string name="approve">Approve</string>
     <string name="CurrentUserName">Dorena Paschke</string>
     <string name="action_refresh">Refresh</string>
-    <string name="login_name">O365 Login</string>
+    <string name="login_name">Office 365 Login</string>
     <string name="client_id">OAuth Client ID</string>
     <string name="site_url">SharePoint Site Url</string>
     <string name="redirect_uri">Redirect URI</string>
-    <string name="configure_button">Authenticate &amp; Create List</string>
+    <string name="configure_button">Authenticate with SharePoint &amp; Create List</string>
     <string name="title_application_settings">Application Settings</string>
-    <string name="hint_userid">tmech@tmechlabs.onmicrosoft.com</string>
-    <string name="hint_sharepoint_site">https://tmechlabs.sharepoint.com/android/client</string>
-    <string name="hint_client_id">Client ID for this application from Azure AD</string>
+    <string name="hint_userid">\@.onmicrosoft.com</string>
+    <string name="hint_sharepoint_site">https://.sharepoint.com/</string>
+    <string name="hint_client_id">Client ID for this application in Azure AD</string>
     <string name="hint_redirect_url">Redirect URI for this application in Azure AD</string>
     <string name="hint_sharepoint_site_Url">https://tenant.sharepoint.com/sample</string>
     <string name="button_launch">Launch</string>
@@ -43,9 +43,7 @@
     <string name="descr_approve_button">Approve button</string>
     <string name="descr_status_pending">Status pending</string>
     <string name="zero">0</string>
-    <string name="notifications_api_key">Google Notifications Server API Key</string>
-    <string name="notifications_azure_connectionstring">Azure Notifications Hub Connection String</string>
-    <string name="button_CreateApp">Create App in Azure AD</string>
-    <string name="textview_appcreationwarning">If you are tenant admin for the Office 365 subscription and trust this code, you can push the button to create an app in Azure AD. If you prefer you can configure the App in Azure AD manually and enter Client ID and Redirect Url below.</string>
+    <string name="button_CreateApp">Create Application in Azure Active Directory</string>
+    <string name="textview_appcreationwarning">If you are tenant admin for the Office 365 subscription, you can push the button to create an app in Azure AD. If you prefer you can configure the App in Azure AD manually and enter Client ID and Redirect Url below.</string>
 
 </resources>

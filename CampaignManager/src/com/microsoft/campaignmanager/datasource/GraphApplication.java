@@ -7,63 +7,26 @@ import java.util.Map;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.microsoft.office365.OfficeEntity;
-
-// TODO: Auto-generated Javadoc
-/**
- * The Class GraphApplication.
- */
 public class GraphApplication extends GraphEntity {
 
-	/** The m values. */
 	private Map<String, Object> mValues;
 
-	/**
-	 * List from json.
-	 * 
-	 * @param json
-	 *            the json
-	 * @return the list
-	 * @throws JSONException
-	 *             the JSON exception
-	 */
 	public static List<GraphApplication> listFromJson(JSONObject json) throws JSONException {
 		return GraphApplication.listFromJson(json, GraphApplication.class);
 	}
 
-	/**
-	 * Instantiates a new Graph Application object.
-	 */
 	public GraphApplication()  {
 		mValues = new HashMap<String, Object>();
 	}
 	
-	/**
-	 * Adds data to the item.
-	 * 
-	 * @param key
-	 *            the key
-	 * @param data
-	 *            the data
-	 */
 	public void setData(String key, Object data) {
 		mValues.put(key, data);
 	}
 
-	/**
-	 * Gets the values.
-	 * 
-	 * @return the values
-	 */
 	Map<String, Object> getValues() {
 		return new HashMap<String, Object>(mValues);
 	}
 
-	/**
-	 * Gets the id.
-	 * 
-	 * @return the id
-	 */
 	public String getAppId() {
 		return getData("appId").toString();
 	}
@@ -124,13 +87,6 @@ public class GraphApplication extends GraphEntity {
 
 	//  Omitting several fields that are not required for this sample
 
-	/**
-	 * Gets the sub items.
-	 * 
-	 * @param field
-	 *            the field
-	 * @return the sub items
-	 */
 	public List<GraphApplication> getSubItems(String field) {
 		JSONObject subItemsJson = (JSONObject) getData(field);
 
@@ -140,7 +96,6 @@ public class GraphApplication extends GraphEntity {
 			throw new IllegalArgumentException("Cannot get sub items from field " + field, e);
 		}
 	}
-
 
 	@Override
 	public Object getData(String field) {

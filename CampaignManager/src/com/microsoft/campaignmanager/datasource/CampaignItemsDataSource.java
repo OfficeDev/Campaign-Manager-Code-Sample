@@ -231,8 +231,6 @@ public class CampaignItemsDataSource {
 		campaign2.setCampaignDescription("Highlight the new APIs that allow developers to build native apps with access to Office 365 data.");
 		campaign2.setCampaignStatus("Approved");
 		campaign2.setApproverId(mApplication.getCurrentUser().getId());
-		//Url types are not yet supported by SPList
-		//campaign2.setCampaignSite("http://msdn.microsoft.com/en-us/office", "Office 365 API Preview");
 		createCampaign(campaign2);
 
 		CampaignListViewItem campaign3 = new CampaignListViewItem();

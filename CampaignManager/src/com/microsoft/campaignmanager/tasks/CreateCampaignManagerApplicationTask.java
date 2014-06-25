@@ -7,18 +7,19 @@ package com.microsoft.campaignmanager.tasks;
 
 
 import java.util.Calendar;
-import java.util.List;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.microsoft.campaignmanager.CampaignApplication;
 import com.microsoft.campaignmanager.CampaignManagerPreferences;
+import com.microsoft.campaignmanager.R;
 import com.microsoft.campaignmanager.datasource.GraphApplication;
 import com.microsoft.campaignmanager.datasource.GraphDataSource;
-import com.microsoft.campaignmanager.datasource.CampaignItemsDataSource;
 import com.microsoft.campaignmanager.datasource.GraphPermission;
 import com.microsoft.campaignmanager.datasource.GraphResource;
 import com.microsoft.campaignmanager.datasource.GraphServicePrincipal;
@@ -80,7 +81,11 @@ public class CreateCampaignManagerApplicationTask extends AsyncTask<String, Void
 		if (mThrowable == null) {
 			String toastMsg = String.format("Application has been created. CliendID: %s", mPreferences.getClientId());
 			Toast.makeText(mActivity, toastMsg, Toast.LENGTH_LONG).show();
-
+			// Forcing form update here to avoid more infrastructure code to respond to updated preferences
+			((EditText) mActivity.findViewById(R.id.editClientId)).setText(mPreferences.getClientId());
+			((EditText) mActivity.findViewById(R.id.editRedirectUri)).setText(mPreferences.getRedirectUrl());
+			// Enable button to execute SharePoint configuration
+			((Button) mActivity.findViewById(R.id.configureButton)).setEnabled(true);
 		} else {
 			mApplication.handleError(mThrowable);
 		}
@@ -95,39 +100,41 @@ public class CreateCampaignManagerApplicationTask extends AsyncTask<String, Void
 			GraphApplication application = new GraphApplication();
 			Calendar c = Calendar.getInstance();
 
+			// Create Application in Azure AD
 			String appName = String.format("Campaign Manager Android App_%s", c.getTime().toString());
 			application.setDisplayName(appName);
 			application.setPublicClient(true);
 			GraphApplication newApp = mSource.createApplication(application);
 			
+			// Create Service Principal for the Application in Azure AD
 			GraphServicePrincipal newServicePrincipal = mSource.createServicePrincipal(newApp);
 
+			// Create necessary permission and associate them with the Service Principal
 			String spScope = String.format("%s %s", GraphPermission.AllSitesManage, GraphPermission.AllSitesWrite);
 			GraphPermission sharePointPermission = new GraphPermission();
 			sharePointPermission.setClientId(newServicePrincipal.getObjectId());
 			sharePointPermission.setResourceId(GraphResource.SharePoint);
 			sharePointPermission.setScope(spScope);
-			GraphPermission newSharePointPermission = mSource.createPermission(sharePointPermission);
+			mSource.createPermission(sharePointPermission);
 			
 			String aadScope = GraphPermission.UserImpersonation;
 			GraphPermission aadPermission = new GraphPermission();
 			aadPermission.setClientId(newServicePrincipal.getObjectId());
 			aadPermission.setResourceId(GraphResource.GraphAPI);
 			aadPermission.setScope(aadScope);
-			GraphPermission newAzureActiveDirectoryPermission = mSource.createPermission(aadPermission);
+			mSource.createPermission(aadPermission);
 			
 			String dirScope = GraphPermission.UserProfileRead;
 			GraphPermission userProfilePermission = new GraphPermission();
 			userProfilePermission.setClientId(newServicePrincipal.getObjectId());
 			userProfilePermission.setResourceId(GraphResource.AzureActiveDirectory);
 			userProfilePermission.setScope(dirScope);
-			GraphPermission newprofilePermission = mSource.createPermission(userProfilePermission);
+			mSource.createPermission(userProfilePermission);
 
 			// set client id and redirectUrl in app settings
 			mPreferences.setClientId(newApp.getAppId());
 			mPreferences.setRedirectUrl("http://home");
 			
-			//mSource.getApplicationByName(appName);
 		} catch (Throwable t) {
 			mThrowable = t;
 		}

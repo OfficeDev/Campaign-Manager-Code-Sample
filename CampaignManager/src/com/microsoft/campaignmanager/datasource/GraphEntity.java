@@ -1,15 +1,11 @@
 package com.microsoft.campaignmanager.datasource;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import com.microsoft.office365.Constants;
 
 /**
  * The Class GraphEntity.

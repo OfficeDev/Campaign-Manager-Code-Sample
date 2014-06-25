@@ -6,23 +6,11 @@ import java.security.NoSuchAlgorithmException;
 
 import javax.crypto.NoSuchPaddingException;
 
-import com.microsoft.adal.AuthenticationCallback;
-import com.microsoft.adal.AuthenticationContext;
-import com.microsoft.adal.AuthenticationException;
-import com.microsoft.adal.AuthenticationResult;
-import com.microsoft.adal.Logger;
-import com.microsoft.adal.PromptBehavior;
-import com.microsoft.campaignmanager.AppSettingsActivity;
-import com.microsoft.campaignmanager.MainActivity;
-import com.microsoft.campaignmanager.tasks.CreateCampaignListTask;
-import com.microsoft.campaignmanager.tasks.CreateCampaignManagerApplicationTask;
-
-import android.app.Activity;
 import android.app.ActionBar;
+import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
-import android.support.v13.app.FragmentPagerAdapter;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.view.ViewPager;
@@ -32,21 +20,21 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.View.OnFocusChangeListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 
-public class MainActivity extends Activity {
+import com.microsoft.adal.AuthenticationCallback;
+import com.microsoft.adal.AuthenticationContext;
+import com.microsoft.adal.AuthenticationException;
+import com.microsoft.adal.AuthenticationResult;
+import com.microsoft.adal.Logger;
+import com.microsoft.adal.PromptBehavior;
+import com.microsoft.campaignmanager.datasource.GraphConstants;
+import com.microsoft.campaignmanager.tasks.CreateCampaignListTask;
+import com.microsoft.campaignmanager.tasks.CreateCampaignManagerApplicationTask;
 
-	/**
-	 * The {@link android.support.v4.view.PagerAdapter} that will provide
-	 * fragments for each of the sections. We use a
-	 * {@link FragmentPagerAdapter} derivative, which will keep every
-	 * loaded fragment in memory. If this becomes too memory intensive, it
-	 * may be best to switch to a
-	 * {@link android.support.v13.app.FragmentStatePagerAdapter}.
-	 */
+public class MainActivity extends Activity {
 
 	// ADAL Settings
 	AuthenticationContext mContext;
@@ -56,11 +44,7 @@ public class MainActivity extends Activity {
 	private CampaignApplication mApplication;
 	private CampaignManagerPreferences mPreferences;
 
-	/**
-	 * The {@link ViewPager} that will host the section contents.
-	 */
 	ViewPager mViewPager;
-
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -76,10 +60,10 @@ public class MainActivity extends Activity {
 		mPreferences = new CampaignManagerPreferences(appContext,
 				PreferenceManager.getDefaultSharedPreferences(this));
 
-		boolean hasBootstrapConfig = mApplication.hasBootstrapConfigurationSettings();
+		boolean hasGraphConfig = mApplication.hasBootstrapGraphConfigurationSettings();
 		boolean hasConfig = mApplication.hasConfigurationSettings()
 				&& mApplication.hasDefaultList();
-		if (hasBootstrapConfig && !hasConfig){
+		if (hasGraphConfig && !hasConfig){
 			try {
 				authenticateWithOAuthToGraphAPI();
 			} catch (Throwable t) {
@@ -139,18 +123,9 @@ public class MainActivity extends Activity {
 		return mPreferences;
 	}
 
-	/**
-	 * Check preferences.
-	 */
 	private boolean preferencesAreComplete() {
-		//		Intent i = null;
 		return mApplication.hasConfigurationSettings();
-		//		if (!hasConfig) {
-		//			i = new Intent(MainActivity.this, AppSettingsActivity.class);
-		//			startActivity(i);
-
 	}
-
 
 	//	Authentication callback for when configuration is complete
 	private AuthenticationCallback<AuthenticationResult> callback = new AuthenticationCallback<AuthenticationResult>() {
@@ -235,7 +210,11 @@ public class MainActivity extends Activity {
 				mPreferences.setGraphAccessTokenExpiresOn(result.getExpiresOn().toString());
 				mPreferences.setGraphRefreshToken(result.getRefreshToken());
 
-				// Create the application in Azure AD
+				// Create an application in Azure AD for the Office 365 tenancy of the user
+				// the app will have manage rights on all site collections and
+				// write on all site collections
+				// The app will use this access to create a Campaigns list in the specified site
+				// as well as read and write list items.
 				createApplication();
 
 			}
@@ -270,7 +249,6 @@ public class MainActivity extends Activity {
 		}
 		// Optional field, so acquireToken accepts null fields
 		mResult = null;
-		//				mContext.setRequestCorrelationId(mRequestCorrelationId);
 
 		mContext.acquireToken(MainActivity.this, resource, clientId, mPreferences.getRedirectUrl(), userid, PromptBehavior.Auto, "",
 				callback);
@@ -279,13 +257,17 @@ public class MainActivity extends Activity {
 	private void authenticateWithOAuthToGraphAPI() {
 		Logger.v(TAG, "get Token");
 		// We'll use the graph api to create the application
-		mPreferences.setGraphResourceUrl("https://graph.windows.net");
-		mPreferences.setGraphRedirectUrl("http://localhost");
-		// Global Client ID configured by app owner
-		// Used only to create an Application  for the actual Campaign Manager demo
-		// in Azure AD on the Office 365 subscription of the user
-		// This requires tenant admin permissions in O365
-		mPreferences.setGraphClientId("914a80b9-6cfb-4a88-b3fd-0cc40687293a");
+		mPreferences.setGraphResourceUrl(GraphConstants.AAD_GRAPHURL);
+
+		// Global Client ID configured by Microsoft
+		// It is used only to create an Application, ServicePrincipal and Permissions
+		// of API for the actual Campaign Manager demo
+		// This level of access also allows manipulation of users groups and other
+		// AAD objects at this time 
+		// therefore it requires tenant admin permissions in Office 365
+		mPreferences.setGraphClientId(GraphConstants.AAD_SetupAppId);
+		mPreferences.setGraphRedirectUrl(GraphConstants.AAD_SetupRedirectUrl);
+		
 		// Authority Url is the same as for Campaign Manager proper
 		mPreferences.setGraphAuthorityUrl(mPreferences.getAuthorityUrl());
 
@@ -313,7 +295,6 @@ public class MainActivity extends Activity {
 		}
 		// Optional field, so acquireToken accepts null fields
 		mResult = null;
-		//				mContext.setRequestCorrelationId(mRequestCorrelationId);
 
 		mContext.acquireToken(MainActivity.this, resource, clientId, mPreferences.getGraphRedirectUrl(), userid, PromptBehavior.Auto, "",
 				graphCallback);
@@ -330,8 +311,6 @@ public class MainActivity extends Activity {
 	}
 	
 	public static class PlaceholderFragment extends Fragment {
-
-
 
 		public PlaceholderFragment() {
 		}
@@ -371,30 +350,13 @@ public class MainActivity extends Activity {
 							CampaignManagerActivity.class));
 				}				
 			});
-			
-			createAppButton.setOnFocusChangeListener(new OnFocusChangeListener() {
-				@Override
-				public void onFocusChange(View v, boolean hasFocus) {
-					updateSettingsView(v);
-				}
-			});
-			
-			EditText clientIdField = (EditText) rootView.findViewById(R.id.editClientId);
-			clientIdField.setOnFocusChangeListener(new OnFocusChangeListener() {
-				@Override
-				public void onFocusChange(View v, boolean hasFocus) {
-					if(hasFocus)
-						updateSettingsView(v);
-				}
-			});
-			
 			return rootView;
 		}
 		
 		private void updateSettingsView(View v)
 		{
 			View rootView = v.getRootView();
-			// make sure the clientId and redirectUri are reflected in the view based	
+			// make sure the current clientId and redirectUri are reflected in the view	
 			String clientId = mPreferences.getClientId();
 			String redirectUrl = mPreferences.getRedirectUrl();
 			if(clientId != null && clientId != "" && redirectUrl != null && redirectUrl != "")
@@ -465,7 +427,7 @@ public class MainActivity extends Activity {
 
 		private String getAuthorityUrl(String loginName) {
 			if(isValidEmail(loginName)){
-				String authorityUrl = "https://login.windows.net/" + getTenantId(loginName);
+				String authorityUrl = GraphConstants.AAD_LOGINURL + "/" + getTenantId(loginName);
 				return authorityUrl;
 			}
 			return null;

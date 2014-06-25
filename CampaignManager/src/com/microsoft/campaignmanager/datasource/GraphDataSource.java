@@ -1,6 +1,5 @@
 package com.microsoft.campaignmanager.datasource;
 
-import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 import com.microsoft.campaignmanager.CampaignApplication;
@@ -29,38 +28,6 @@ public class GraphDataSource {
 
 	}
 
-	public List<GraphApplication> getAllApplications() {
-		GraphClient client = (GraphClient) getGraphClient();
-		List<GraphApplication> applications;
-		try {
-			applications = client.getAllApplications().get();
-			return applications;
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ExecutionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return null;
-	}
-	
-	public List<GraphApplication> getApplicationByName(String displayName) {
-		GraphClient client = (GraphClient) getGraphClient();
-		List<GraphApplication> applications;
-		try {
-			applications = client.getApplicationByName(displayName).get();
-			return applications;
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ExecutionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return null;
-	}
-	
 	public GraphApplication createApplication(GraphApplication application) {
 		GraphClient client = (GraphClient) getGraphClient();
 		try {
