@@ -21,3 +21,6 @@ We understand a fair few of you may not have done Android development before, so
 - [Developer Center](http://dev.office.com/)  
 - [Office 365 Developer Blog](http://blogs.office.com/dev)
 - [Office 365 API documentatoin] (http://msdn.microsoft.com/en-us/library/office/dn605892(v=office.15).aspx)
+
+
+This project has adopted the [Microsoft Open Source Code of Conduct](https://opensource.microsoft.com/codeofconduct/). For more information, see the [Code of Conduct FAQ](https://opensource.microsoft.com/codeofconduct/faq/) or contact [opencode@microsoft.com](mailto:opencode@microsoft.com) with any additional questions or comments.
