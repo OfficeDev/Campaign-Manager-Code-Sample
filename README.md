@@ -1,3 +1,21 @@
+---
+topic: sample
+products:
+- SharePoint
+- Office 365
+languages:
+- Java
+extensions:
+  contentType: samples
+  technologies: []
+  services:
+  - SharePoint
+  platforms:
+  - Android
+  createdDate: 5/5/2014 2:04:36 AM
+  scenarios:
+  - Mobile
+---
 # Campaign Manager #
 
 The Campaign Manager Android App was first demoed at the SharePoint Conference 2014 keynote. Watch the [keynote](http://channel9.msdn.com/Events/SharePoint-Conference/2014/KEY01) at Channel 9.
