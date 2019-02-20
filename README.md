@@ -5,16 +5,13 @@ products:
 - Office 365
 languages:
 - Java
+scenarios:
+- Mobile
 extensions:
   contentType: samples
-  technologies: []
-  services:
-  - SharePoint
   platforms:
   - Android
   createdDate: 5/5/2014 2:04:36 AM
-  scenarios:
-  - Mobile
 ---
 # Campaign Manager #
 
