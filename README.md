@@ -1,8 +1,10 @@
 ---
-topic: sample
+page_type: sample
 products:
 - office-sp
 - office-365
+description: "The Campaign Manager Android App was first demoed at the SharePoint Conference 2014 keynote."
+urlFragment: campaign-manager
 languages:
 - java
 extensions:
@@ -13,7 +15,8 @@ extensions:
   scenarios:
   - Mobile
 ---
-# Campaign Manager #
+
+# Campaign Manager
 
 The Campaign Manager Android App was first demoed at the SharePoint Conference 2014 keynote. Watch the [keynote](http://channel9.msdn.com/Events/SharePoint-Conference/2014/KEY01) at Channel 9.
 
