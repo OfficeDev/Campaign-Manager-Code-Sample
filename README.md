@@ -3,7 +3,8 @@ page_type: sample
 products:
 - office-sp
 - office-365
-description: "The Campaign Manager Android App was first demoed at the SharePoint Conference 2014 keynote."
+- office-outlook
+description: "The Campaign Manager Android App demonstrates the power of the Office 365 APIs, which allow you to access Office 365 services such as OneDrive for Business, mail, calendar, sites, and users and groups."
 urlFragment: campaign-manager
 languages:
 - java
